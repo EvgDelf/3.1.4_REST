@@ -8,16 +8,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
+;
 
 
 @RestController
@@ -38,12 +42,12 @@ public class RestApiController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userService.findAll();
     }
 
     @GetMapping("/user/{id}")
-    @PreAuthorize("#user.id == principal.id || hasRole('ADMIN')")
+    @PreAuthorize("#id == T(Long).parseLong(principal.id) || hasRole('ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         User user = userService.findById(id);
         return ResponseEntity.ok(user);
@@ -62,6 +66,7 @@ public class RestApiController {
         userService.edit(user);
         return user;
     }
+
     @PostMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(@PathVariable("id") Long id) {
@@ -75,7 +80,8 @@ public class RestApiController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
             return ResponseEntity.ok("Logged out successfully");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated"); }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+        }
     }
 
 }

@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch('/api/users')
         .then(response => response.json())
         .then(data => {
+            data.splice(0,1);
             data.forEach(user => {
                 const usersTable = document.getElementById('usersTableBody')
                 const roles = user.roles.map(role => role.name.replace("ROLE_","")).join(' ');
