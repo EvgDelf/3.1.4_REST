@@ -20,13 +20,13 @@ public class Role implements GrantedAuthority {
     private List<User> users;
     public Role(){}
 
-    public Role(String id) {
-
+    public Role(String name) {
+        this.name = name;
     }
 
     @Override
     public String getAuthority() {
-        return this.name;
+        return this.name.replace("ROLE_","");
     }
 
     public Long getId() {

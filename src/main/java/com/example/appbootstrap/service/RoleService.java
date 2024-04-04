@@ -25,8 +25,11 @@ public class RoleService {
 
     public Optional<Role> findById(Long id) {return roleRepository.findById(id);}
 
-    public String getRolesNames(List<Role> roles) {
-        return roles.stream().map(role->role.getName().replace("ROLE_","")).collect(Collectors.joining(" "));
+    public int count() {
+        return (int) roleRepository.count();
     }
 
+    public void save(Role adminRole) {
+        roleRepository.save(adminRole);
+    }
 }

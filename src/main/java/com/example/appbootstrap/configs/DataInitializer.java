@@ -6,6 +6,7 @@ import com.example.appbootstrap.model.User;
 import com.example.appbootstrap.repository.RoleRepository;
 import com.example.appbootstrap.repository.UserRepository;
 import com.example.appbootstrap.service.RoleService;
+import com.example.appbootstrap.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,16 +19,17 @@ import java.util.stream.Stream;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
-    private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
+    private final RoleService roleRepository;
+    private final UserService userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(RoleService roleRepository, UserService userRepository, PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public void run(String... args) {

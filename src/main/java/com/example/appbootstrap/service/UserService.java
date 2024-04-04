@@ -13,12 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -45,12 +42,7 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User '%s' not found", username));
         }
-        List<Role> roles = user.getRoles();
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthorities(roles));
-    }
-
-    public Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return user;
     }
 
     public List<User> findAll() {
@@ -74,7 +66,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void edit (User user) {
+    public void edit(User user) {
+        User existingUser = userRepository.findById(user.getId()).orElse(null);
+        if (existingUser != null && !existingUser.getPassword().equals(user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
     }
 
